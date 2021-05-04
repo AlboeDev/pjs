@@ -1,0 +1,115 @@
+name: Main - Pull Request
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          check-latest: true
+        
+      - name: Install project
+        run: npm install
+        
+      - name: Cache dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          key: node-modules
+          path: node_modules/
+
+  validate:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          check-latest: true
+
+      - name: Uncache dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          key: node-modules
+          path: node_modules/
+
+      - name: Validate compilation
+        run: npm run compile:validate
+
+  test-integration:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          check-latest: true
+        
+      - name: Uncache dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          key: node-modules
+          path: node_modules/
+          
+      - name: Integration test changes
+        run: npm run test:integration
+        
+  test-unit:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          check-latest: true
+        
+      - name: Uncache dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          key: node-modules
+          path: node_modules/
+          
+      - name: Unit test changes
+        run: npm run test:unit
+        
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.x
+          check-latest: true
+        
+      - name: Uncache dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          key: node-modules
+          path: node_modules/
+          
+      - name: Lint changes
+        run: npm run lint
